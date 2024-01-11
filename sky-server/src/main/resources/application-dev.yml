@@ -12,3 +12,13 @@ sky:
     access-key-id: LTAI5tQvD4Po2sqMbTSzRf82
     access-key-secret: OJEewvRFJGJgDxdBctnVE2pD7XRzXC
     bucket-name: amigo2012
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 0
+
+  wechat:
+    appid: wxd4054508c82e1a7c
+    secret: 242416cc1662426246ef8216309d6859
