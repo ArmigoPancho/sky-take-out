@@ -3,7 +3,7 @@ package com.sky.handler;
 import com.sky.constant.MessageConstant;
 import com.sky.exception.BaseException;
 import com.sky.result.Result;
-import com.sun.xml.internal.bind.marshaller.MinimumEscapeHandler;
+//import com.sun.xml.internal.bind.marshaller.MinimumEscapeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

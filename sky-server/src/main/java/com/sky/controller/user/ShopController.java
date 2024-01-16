@@ -20,7 +20,7 @@ public class ShopController {
     private RedisTemplate redisTemplate;
 
     /**
-     * 管理端获取店铺营业状态
+     * 用户端获取店铺营业状态
      * @return
      */
     @GetMapping("/status")
