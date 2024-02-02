@@ -3,6 +3,8 @@ import com.sky.dto.OrdersDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.entity.OrderDetail;
+import com.sky.entity.Orders;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
@@ -66,5 +68,17 @@ public class OrderController {
         log.info("历史订单分页查询");
         PageResult pageResult = orderService.pageQuery4User( page, pageSize, status);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 根据id查询订单详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/orderDetail/{id}")
+    @ApiOperation("根据id查询订单详情")
+    public Result<OrderVO> getOrderDetail(@PathVariable Long id){
+        OrderVO orderVO = orderService.details(id);
+        return Result.success(orderVO);
     }
 }
