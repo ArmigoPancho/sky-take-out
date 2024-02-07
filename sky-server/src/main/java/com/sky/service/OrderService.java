@@ -49,4 +49,11 @@ public interface OrderService {
      * @return
      */
     OrderVO details(Long id);
+
+    /**
+     * 根据订单id取消订单
+     * @param id
+     * @return
+     */
+    void userCancelById(Long id) throws Exception;
 }
