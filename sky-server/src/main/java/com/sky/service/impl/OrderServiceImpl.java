@@ -386,10 +386,37 @@ public  class OrderServiceImpl implements OrderService {
         Orders orders =new Orders();
         orders.setId(ordersRejectionDTO.getId());
         orders.setStatus(Orders.CANCELLED);
-//        orders.setPayStatus(Orders.REFUND);
         orders.setRejectionReason(ordersRejectionDTO.getRejectionReason());
         orders.setCancelTime(LocalDateTime.now());
         orderMapper.update(orders);
+    }
+
+    /**
+     * 取消订单
+     * @param ordersCancelDTO
+     * @throws Exception
+     */
+    public void cancel(OrdersCancelDTO ordersCancelDTO) throws Exception {
+        //get the order by order id
+        Orders ordersDB = orderMapper.getOrderById(ordersCancelDTO.getId());
+        //get the payment status
+        Integer payStatus = ordersDB.getPayStatus();
+        if(payStatus == Orders.PAID){
+            //call refund method
+            //        String refund = weChatPayUtil.refund(
+//                    ordersDB.getNumber(),
+//                    ordersDB.getNumber(),
+//                    new BigDecimal(0.01),
+//                    new BigDecimal(0.01));
+//            log.info("申请退款：{}", refund);
+        }
+    // update the ORDER with status,paystatus,cancelTime,cancelReason
+            Orders orders = new Orders();
+            orders.setId(ordersCancelDTO.getId());
+            orders.setStatus(Orders.CANCELLED);
+            orders.setCancelTime(LocalDateTime.now());
+            orders.setCancelReason(ordersCancelDTO.getCancelReason());
+            orderMapper.update(orders);
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
