@@ -419,6 +419,26 @@ public  class OrderServiceImpl implements OrderService {
             orderMapper.update(orders);
     }
 
+    /**
+     * 派送订单
+     * @param id
+     */
+    public void delivery(Long id) {
+        //get order by id
+        Orders orderDB = orderMapper.getOrderById(id);
+
+        //only orderDB with a status of CONFIRMED(3) can be delivered
+        Integer orderDBStatus = orderDB.getStatus();
+        if(orderDBStatus==null || !orderDBStatus.equals(Orders.CONFIRMED)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        //update the status to DELIVERY_IN_PROGRESS(4)
+        Orders orders = new Orders();
+        orders.setId(orderDB.getId());
+        orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        orderMapper.update(orders);
+    }
+
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
         // 需要返回订单菜品信息，自定义OrderVO响应结果
         List<OrderVO> orderVOList = new ArrayList<>();
