@@ -439,6 +439,28 @@ public  class OrderServiceImpl implements OrderService {
         orderMapper.update(orders);
     }
 
+    /**
+     * 完成订单
+     * @param id
+     * @return
+     */
+    public void complete(Long id) {
+        Orders orderDB = orderMapper.getOrderById(id);
+
+        //only orderDB with a status of DELIVERY_IN_PROGRESS(4) can be delivered
+        Integer orderDBStatus = orderDB.getStatus();
+        if(orderDBStatus==null || !orderDBStatus.equals(Orders.DELIVERY_IN_PROGRESS)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        //update DeliveryTime,the status to COMPLETED(5)
+        Orders orders = new Orders();
+        orders.setId(orderDB.getId());
+        orders.setStatus(Orders.COMPLETED);
+        orders.setDeliveryTime(LocalDateTime.now());
+        orderMapper.update(orders);
+        //error:if the order is completed,can administrator still cancel the order?
+    }
+
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
         // 需要返回订单菜品信息，自定义OrderVO响应结果
         List<OrderVO> orderVOList = new ArrayList<>();
