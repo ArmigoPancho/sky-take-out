@@ -24,7 +24,7 @@ public class OrderTask {
      */
     @Scheduled(cron = "0 * * * * ?") //每分钟触发一次do this task every one minute
     public void processTimeOutOrder(){
-        log.info("但是处理超时未付款的订单：{}",LocalDateTime.now());
+        log.info("处理超时未付款的订单：{}",LocalDateTime.now());
 
         LocalDateTime time = LocalDateTime.now().plusMinutes(-15);  //当前时间减去15分钟The current time minus 15 minutes
         List<Orders> ordersList = orderMapper.getByStatusAndTimeoutLT(Orders.PENDING_PAYMENT,time); //get the timeout orders(>15mins)

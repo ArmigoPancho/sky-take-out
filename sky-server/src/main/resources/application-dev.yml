@@ -22,3 +22,4 @@ sky:
   wechat:
     appid: wxd4054508c82e1a7c
     secret: 242416cc1662426246ef8216309d6859
+    notifyUrl: https://58859fb.r2.cpolar.top/notify/paySuccess

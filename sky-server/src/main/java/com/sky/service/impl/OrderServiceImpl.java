@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.profile.IClientProfile;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -18,6 +19,7 @@ import com.sky.service.OrderService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.*;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,9 @@ public  class OrderServiceImpl implements OrderService {
     @Value("${sky.baidu.ak}")
     private String ak;
 
+    @Autowired
+    private WebSocketServer webSocketServer;
+
     /**
      * 用户下单
      * @param ordersSubmitDTO
@@ -79,7 +84,7 @@ public  class OrderServiceImpl implements OrderService {
         }
 
         //检查用户的收货地址是否超出配送范围check if customer's address is beyond the delivery range
-        checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
+//        checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
 
         //查询当前用户的购物车数据
         Long userId = BaseContext.getCurrentId();
@@ -143,7 +148,7 @@ public  class OrderServiceImpl implements OrderService {
         Long userId = BaseContext.getCurrentId();
         User user = userMapper.getById(userId);
 
-        //调用微信支付接口，生成预支付交易单
+//        //调用微信支付接口，生成预支付交易单
 //        JSONObject jsonObject = weChatPayUtil.pay(
 //                ordersPaymentDTO.getOrderNumber(), //商户订单号
 //                new BigDecimal(0.01), //支付金额，单位 元
@@ -170,6 +175,17 @@ public  class OrderServiceImpl implements OrderService {
         Long orderId = Long.valueOf(ordersPaymentDTO.getOrderNumber());
         orderMapper.updateStatus(OrderStatus, PayStatus, check_out_time, orderId);
 
+        //由于本代码无法用微信的回调服务，下面是测试websocket功能，不属于正常业务逻辑
+//        通过websocket向客户端浏览器推送消息,push messages to client's browser by websocket:type orderId content
+//        Map map = new HashMap();
+//        map.put("type",1);  //1是来单提醒，2是客户催单。1 is a system's reminder for a new order，2 is customer's reminder for an existing order
+//        map.put("orderId", 2);
+//        map.put("content","订单号："+ordersPaymentDTO.getOrderNumber());
+//
+//        String json = JSON.toJSONString(map);
+//        log.info("支付成功后的提示信息："+json);
+//        webSocketServer.sendToAllClient(json);
+
         return vo;
     }
 
@@ -192,6 +208,16 @@ public  class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+//        //通过websocket向客户端浏览器推送消息,push messages to client's browser by websocket:type orderId content
+//        Map map = new HashMap();
+//        map.put("type",1);  //1是来单提醒，2是客户催单。1 is a system's reminder for a new order，2 is customer's reminder for an existing order
+//        map.put("orderId",ordersDB.getId());
+//        map.put("content","订单号："+outTradeNo);
+//
+//        String json = JSON.toJSONString(map);
+//        log.info("支付成功后的拼接信息："+json);
+//        webSocketServer.sendToAllClient(json);
     }
 
     /**
