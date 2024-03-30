@@ -4,6 +4,8 @@ import com.sky.dto.UserLoginDTO;
 import com.sky.entity.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 public interface UserService {
 
@@ -14,4 +16,6 @@ public interface UserService {
      * @return
      */
     User wxlogin(UserLoginDTO userLoginDTO);
+
+
 }

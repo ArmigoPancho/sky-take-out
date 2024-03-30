@@ -1,11 +1,12 @@
 package com.sky.service.impl;
 
-
-import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.service.UserService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
     /**
@@ -54,7 +57,7 @@ public class ReportServiceImpl implements ReportService {
             map.put("endTime",endTime);
             map.put("status", Orders.COMPLETED);
             Double turnover = orderMapper.sumByMap(map);
-            turnover = turnover == null?0.0:turnover; //if there is no turnover on a given day,return 0.0,otherwise return turnover number
+            turnover = turnover == null?0.0:turnover; //if there is no turnover on a given day,return 0.0,otherwise return turnover number，because there is no data in database,the total amount is null
             turnoverList.add(turnover);
 
         }
@@ -65,5 +68,53 @@ public class ReportServiceImpl implements ReportService {
                 .build();
 
 
+    }
+
+    /**
+     * 统计指定时间内的用户统计:gather user statistics within a specified time frame
+     * @param begin
+     * @param end
+     * @return
+     */
+    public UserReportVO userStatistic(LocalDate begin, LocalDate end) {
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+
+        while (!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+
+        //store the number of new users in one day
+        List<Integer> newUserList = new ArrayList<>();
+        //store the number of all users before current date（including current date）
+        List<Integer> totalUserList = new ArrayList<>();
+
+        Map map = new HashMap<>();
+        for (LocalDate date : dateList) {
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+
+
+            map.put("endTime", endTime);
+            //total users until today
+            Integer totalUser = userMapper.countByMap(map);
+
+            map.put("beginTime", beginTime);
+            //new users in one day
+            Integer newUser = userMapper.countByMap(map);
+
+            newUserList.add(newUser);
+            totalUserList.add(totalUser);
+
+            map.remove("endTime");
+            map.remove("beginTime");
+        }
+        return UserReportVO
+                .builder()
+                .dateList(StringUtils.join(dateList, ','))
+                .totalUserList(StringUtils.join(totalUserList,','))
+                .newUserList(StringUtils.join(newUserList,','))
+                .build();
     }
 }

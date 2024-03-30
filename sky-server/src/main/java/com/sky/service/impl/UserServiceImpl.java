@@ -11,12 +11,18 @@ import com.sky.mapper.UserMapper;
 import com.sky.properties.WeChatProperties;
 import com.sky.service.UserService;
 import com.sky.utils.HttpClientUtil;
+import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -58,6 +64,8 @@ public class UserServiceImpl implements UserService {
         //有信息则表明是老用户返回这个用户对象
         return user;
     }
+
+
 
     /**
      * 调用微信接口，获取微信用户的openid
