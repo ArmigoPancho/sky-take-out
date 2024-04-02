@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.DishVO;
@@ -80,4 +81,19 @@ public interface OrderMapper {
      * @return
      */
     Double sumByMap(Map map);
+
+    /**
+     * inquiry every day's orders' number according to conditions 根据动态条件查询订单数据
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map map);
+
+    /**
+     * 指定时间内销量Tpo10统计
+     * @param begin
+     * @param end
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin,LocalDateTime end);  //need a list to add every DTO object,each piece of data is a DTO object
 }
