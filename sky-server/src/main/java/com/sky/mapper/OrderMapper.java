@@ -80,4 +80,11 @@ public interface OrderMapper {
      * @return
      */
     Double sumByMap(Map map);
+
+    /**
+     * inquiry every day's orders' number according to conditions 根据动态条件查询订单数据
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map map);
 }
